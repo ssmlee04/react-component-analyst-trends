@@ -147,13 +147,13 @@ function (_React$Component) {
 
       var profile = this.props.profile; // eslint-disable-next-line
 
-      var initialData = _lodash["default"].uniqBy(profile && profile.recommendation && profile.recommendation.data || [], function (d) {
+      var initialData = _lodash["default"].sortBy(_lodash["default"].uniqBy(profile && profile.recommendation && profile.recommendation.data || [], function (d) {
         return (0, _dayjs["default"])(d.consensusEndDate).format('YYYYMM');
       }).filter(function (d) {
         return d.consensusEndDate;
-      }).sort(function (a, b) {
-        return (0, _dayjs["default"])(a.consensusEndDate).format('YYYYMM') > (0, _dayjs["default"])(b.consensusEndDate).format('YYYYMM');
-      }).reverse().slice(-18);
+      }), function (d) {
+        return d.consensusEndDate;
+      }).slice(-18);
 
       var copied = this.state.copied;
 

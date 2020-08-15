@@ -97,7 +97,7 @@ export class AnalystTrends extends React.Component {
   render() {
     const { profile } = this.props;
     // eslint-disable-next-line
-    const initialData = _.uniqBy((profile && profile.recommendation && profile.recommendation.data || []), d => dayjs(d.consensusEndDate).format('YYYYMM')).filter(d => d.consensusEndDate).sort((a, b) => dayjs(a.consensusEndDate).format('YYYYMM') > dayjs(b.consensusEndDate).format('YYYYMM')).reverse().slice(-18);
+    const initialData = _.sortBy(_.uniqBy((profile && profile.recommendation && profile.recommendation.data || []), d => dayjs(d.consensusEndDate).format('YYYYMM')).filter(d => d.consensusEndDate), d => d.consensusEndDate).slice(-18);
     const { copied } = this.state;
     if (!profile) {
       return (
