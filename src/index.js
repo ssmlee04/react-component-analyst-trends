@@ -65,6 +65,10 @@ const attributes = [{
   label: 'Sell'
 }];
 
+const date = (d) => {
+  return d.consensusStartDate || d.consensusEndDate;
+};
+
 const genDataSetAndAttributes = (attribute, data) => {
   return {
     fill: false,
@@ -97,7 +101,7 @@ export class AnalystTrends extends React.Component {
   render() {
     const { profile } = this.props;
     // eslint-disable-next-line
-    const initialData = _.sortBy(_.uniqBy((profile && profile.recommendation && profile.recommendation.data || []), d => dayjs(d.consensusEndDate || d.consensusStartDate).format('YYYYMM')).filter(d => d.consensusEndDate || d.consensusStartDate), d => d.consensusEndDate || d.consensusStartDate).slice(-12);
+    const initialData = _.sortBy(_.uniqBy((profile && profile.recommendation && profile.recommendation.data || []), d => dayjs(date(d)).format('YYYYMM')).filter(d => date(d)), d => date(d)).slice(-12);
     const { copied } = this.state;
     if (!profile) {
       return (
@@ -119,7 +123,7 @@ export class AnalystTrends extends React.Component {
       );
     }
     const data = {
-      labels: initialData.map(d => dayjs(d.consensusEndDate || d.consensusStartDate).format('YYYYMM')),
+      labels: initialData.map(d => dayjs(date(d)).format('YYYYMM')),
       datasets: attributes.map(attr => genDataSetAndAttributes(attr, initialData))
     };
 

@@ -102,6 +102,10 @@ var attributes = [{
   label: 'Sell'
 }];
 
+var date = function date(d) {
+  return d.consensusStartDate || d.consensusEndDate;
+};
+
 var genDataSetAndAttributes = function genDataSetAndAttributes(attribute, data) {
   return _objectSpread({
     fill: false,
@@ -148,11 +152,11 @@ function (_React$Component) {
       var profile = this.props.profile; // eslint-disable-next-line
 
       var initialData = _lodash["default"].sortBy(_lodash["default"].uniqBy(profile && profile.recommendation && profile.recommendation.data || [], function (d) {
-        return (0, _dayjs["default"])(d.consensusEndDate || d.consensusStartDate).format('YYYYMM');
+        return (0, _dayjs["default"])(date(d)).format('YYYYMM');
       }).filter(function (d) {
-        return d.consensusEndDate || d.consensusStartDate;
+        return date(d);
       }), function (d) {
-        return d.consensusEndDate || d.consensusStartDate;
+        return date(d);
       }).slice(-12);
 
       var copied = this.state.copied;
@@ -191,7 +195,7 @@ function (_React$Component) {
 
       var data = {
         labels: initialData.map(function (d) {
-          return (0, _dayjs["default"])(d.consensusEndDate || d.consensusStartDate).format('YYYYMM');
+          return (0, _dayjs["default"])(date(d)).format('YYYYMM');
         }),
         datasets: attributes.map(function (attr) {
           return genDataSetAndAttributes(attr, initialData);
