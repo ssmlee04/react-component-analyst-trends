@@ -81,13 +81,13 @@ var attributes = [{
   attr: 'ratingBuy',
   label: 'Buy'
 }, {
-  backgroundColor: 'blue',
-  borderColor: 'blue',
+  backgroundColor: 'limegreen',
+  borderColor: 'limegreen',
   attr: 'ratingOverweight',
   label: 'Overweight'
 }, {
-  backgroundColor: 'gray',
-  borderColor: 'gray',
+  backgroundColor: 'lightseagreen',
+  borderColor: 'lightseagreen',
   attr: 'ratingHold',
   label: 'Hold'
 }, {
@@ -153,7 +153,7 @@ function (_React$Component) {
         return d.consensusEndDate;
       }), function (d) {
         return d.consensusEndDate;
-      }).slice(-18);
+      }).slice(-12);
 
       var copied = this.state.copied;
 
@@ -214,7 +214,7 @@ function (_React$Component) {
         style: {
           width: '100%'
         }
-      }, _react["default"].createElement(_reactChartjs.Line, {
+      }, _react["default"].createElement(_reactChartjs.Bar, {
         data: data,
         height: 180,
         options: options

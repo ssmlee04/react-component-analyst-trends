@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import dayjs from 'dayjs';
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import './../index.css';
 
@@ -44,13 +44,13 @@ const attributes = [{
   attr: 'ratingBuy',
   label: 'Buy'
 }, {
-  backgroundColor: 'blue',
-  borderColor: 'blue',
+  backgroundColor: 'limegreen',
+  borderColor: 'limegreen',
   attr: 'ratingOverweight',
   label: 'Overweight'
 }, {
-  backgroundColor: 'gray',
-  borderColor: 'gray',
+  backgroundColor: 'lightseagreen',
+  borderColor: 'lightseagreen',
   attr: 'ratingHold',
   label: 'Hold'
 }, {
@@ -97,7 +97,7 @@ export class AnalystTrends extends React.Component {
   render() {
     const { profile } = this.props;
     // eslint-disable-next-line
-    const initialData = _.sortBy(_.uniqBy((profile && profile.recommendation && profile.recommendation.data || []), d => dayjs(d.consensusEndDate).format('YYYYMM')).filter(d => d.consensusEndDate), d => d.consensusEndDate).slice(-18);
+    const initialData = _.sortBy(_.uniqBy((profile && profile.recommendation && profile.recommendation.data || []), d => dayjs(d.consensusEndDate).format('YYYYMM')).filter(d => d.consensusEndDate), d => d.consensusEndDate).slice(-12);
     const { copied } = this.state;
     if (!profile) {
       return (
@@ -129,7 +129,7 @@ export class AnalystTrends extends React.Component {
           <div style={{ color: 'darkred', fontWeight: 'bold' }}>{profile.ticker} - {profile.name} <span className='green'>Analyst Ratings</span></div>
         </div>
         <div style={{ width: '100%' }}>
-          <Line data={data} height={180} options={options} />
+          <Bar data={data} height={180} options={options} />
         </div>
       </div>
     );
