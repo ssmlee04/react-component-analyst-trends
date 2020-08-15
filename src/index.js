@@ -97,7 +97,7 @@ export class AnalystTrends extends React.Component {
   render() {
     const { profile } = this.props;
     // eslint-disable-next-line
-    const initialData = _.sortBy(_.uniqBy((profile && profile.recommendation && profile.recommendation.data || []), d => dayjs(d.consensusEndDate).format('YYYYMM')).filter(d => d.consensusEndDate), d => d.consensusEndDate).slice(-12);
+    const initialData = _.sortBy(_.uniqBy((profile && profile.recommendation && profile.recommendation.data || []), d => dayjs(d.consensusEndDate || d.consensusStartDate).format('YYYYMM')).filter(d => d.consensusEndDate || d.consensusStartDate), d => d.consensusEndDate || d.consensusStartDate).slice(-12);
     const { copied } = this.state;
     if (!profile) {
       return (
@@ -119,7 +119,7 @@ export class AnalystTrends extends React.Component {
       );
     }
     const data = {
-      labels: initialData.map(d => dayjs(d.consensusEndDate).format('YYYYMM')),
+      labels: initialData.map(d => dayjs(d.consensusEndDate || d.consensusStartDate).format('YYYYMM')),
       datasets: attributes.map(attr => genDataSetAndAttributes(attr, initialData))
     };
 

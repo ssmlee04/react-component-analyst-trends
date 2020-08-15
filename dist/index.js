@@ -148,11 +148,11 @@ function (_React$Component) {
       var profile = this.props.profile; // eslint-disable-next-line
 
       var initialData = _lodash["default"].sortBy(_lodash["default"].uniqBy(profile && profile.recommendation && profile.recommendation.data || [], function (d) {
-        return (0, _dayjs["default"])(d.consensusEndDate).format('YYYYMM');
+        return (0, _dayjs["default"])(d.consensusEndDate || d.consensusStartDate).format('YYYYMM');
       }).filter(function (d) {
-        return d.consensusEndDate;
+        return d.consensusEndDate || d.consensusStartDate;
       }), function (d) {
-        return d.consensusEndDate;
+        return d.consensusEndDate || d.consensusStartDate;
       }).slice(-12);
 
       var copied = this.state.copied;
@@ -191,7 +191,7 @@ function (_React$Component) {
 
       var data = {
         labels: initialData.map(function (d) {
-          return (0, _dayjs["default"])(d.consensusEndDate).format('YYYYMM');
+          return (0, _dayjs["default"])(d.consensusEndDate || d.consensusStartDate).format('YYYYMM');
         }),
         datasets: attributes.map(function (attr) {
           return genDataSetAndAttributes(attr, initialData);
