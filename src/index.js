@@ -1,16 +1,84 @@
 import React from 'react';
 import _ from 'lodash';
-import { Doughnut } from 'react-chartjs-2';
+import dayjs from 'dayjs';
+import { Line } from 'react-chartjs-2';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import './../index.css';
+
 const options = {
   legend: {
-    position: 'left',
-    display: true,
-    fontSize: 14
+    labels: {
+      fontSize: 14,
+      boxWidth: 3,
+    }
+  },
+  scales: {
+    xAxes: [{
+      ticks: {
+        fontSize: 12
+      }
+    }],
+    yAxes: [{
+      ticks: {
+        fontSize: 12
+      }
+    }]
+  },
+  tooltips: {
+    callbacks: {
+      label: function(tooltipItem, data) {
+        const info = data.datasets[tooltipItem.datasetIndex];
+        const reportDate = info.all[tooltipItem.datasetIndex].reportDate;
+          var label = `${reportDate} ${info.label}: `;
+          label += tooltipItem.yLabel || 'n/a';
+          label += '%';
+          return label;
+      }
+    }
   }
 };
-export class Analyst extends React.Component {
+
+const attributes = [{
+  backgroundColor: 'darkgreen',
+  borderColor: 'darkgreen',
+  attr: 'ratingBuy',
+  label: 'Buy'
+}, {
+  backgroundColor: 'blue',
+  borderColor: 'blue',
+  attr: 'ratingOverweight',
+  label: 'Overweight'
+}, {
+  backgroundColor: 'gray',
+  borderColor: 'gray',
+  attr: 'ratingHold',
+  label: 'Hold'
+}, {
+  backgroundColor: 'orange',
+  borderColor: 'orange',
+  attr: 'ratingUnderweight',
+  label: 'Underweight'
+}, {
+  backgroundColor: 'red',
+  borderColor: 'red',
+  attr: 'ratingSell',
+  label: 'Sell'
+}];
+
+const genDataSetAndAttributes = (attribute, data) => {
+  return {
+    fill: false,
+    lineTension: 0,
+    borderWidth: 2,
+    pointRadius: 2,
+    pointHoverRadius: 5,
+    data: data.map(d => _.get(d, attribute.attr)),
+    all: data,
+    ...attribute
+  };
+};
+
+export class AnalystTrends extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,19 +96,21 @@ export class Analyst extends React.Component {
 
   render() {
     const { profile } = this.props;
+    // eslint-disable-next-line
+    const initialData = _.uniqBy((profile && profile.recommendation && profile.recommendation.data || []), d => dayjs(d.consensusEndDate).format('YYYYMM')).filter(d => d.consensusEndDate).sort((a, b) => dayjs(a.consensusEndDate).format('YYYYMM') > dayjs(b.consensusEndDate).format('YYYYMM')).reverse().slice(-18);
     const { copied } = this.state;
     if (!profile) {
       return (
         <div style={{ fontSize: 14 }}>Not available at this time... </div>
       );
     }
-    if (profile.analyst_img && profile.analyst_img.url) {
+    if (profile.recommendation_trend_img && profile.recommendation_trend_img.url) {
       const btnClass = copied ? 'react-components-show-url btn btn-sm btn-danger disabled font-10' : 'react-components-show-url btn btn-sm btn-warning font-10';
       const btnText = copied ? 'Copied' : 'Copy Img';
       return (
         <div className='react-components-show-button'>
-          <img alt={`${profile.ticker} - ${profile.name} analyst opinions`} src={profile.analyst_img.url} style={{ width: '100%' }} />
-          <CopyToClipboard text={profile.analyst_img.url || ''}
+          <img alt={`${profile.ticker} - ${profile.name} analyst opinions`} src={profile.recommendation_trend_img.url} style={{ width: '100%' }} />
+          <CopyToClipboard text={profile.recommendation_trend_img.url || ''}
             onCopy={() => this.setState({ copied: true })}
           >
             <button className={btnClass} value={btnText}>{btnText}</button>
@@ -48,57 +118,22 @@ export class Analyst extends React.Component {
         </div>
       );
     }
-    const recommendation = _.first((profile.recommendation || {}).data) || {};
-    const pricetarget = _.first((profile.pricetarget || {}).data) || {};
-
     const data = {
-      labels: [
-        `Buy (${recommendation.ratingBuy})`,
-        `Overweight (${recommendation.ratingOverweight})`,
-        `Hold (${recommendation.ratingHold})`,
-        `Underweight (${recommendation.ratingUnderweight})`,
-        `Sell (${recommendation.ratingSell})`,
-      ],
-      datasets: [{
-        data: [
-          recommendation.ratingBuy,
-          recommendation.ratingOverweight,
-          recommendation.ratingHold,
-          recommendation.ratingUnderweight,
-          recommendation.ratingSell,
-        ],
-        backgroundColor: [
-        'darkgreen',
-        'green',
-        'gold',
-        'orange',
-        'red'
-        ],
-      }]
+      labels: initialData.map(d => dayjs(d.consensusEndDate).format('YYYYMM')),
+      datasets: attributes.map(attr => genDataSetAndAttributes(attr, initialData))
     };
 
     return (
       <div>
         <div style={{ width: '100%', padding: 5, fontSize: 14 }}>
-          <div style={{ color: 'darkred', fontWeight: 'bold' }}>{profile.ticker} - {profile.name}</div>
-          {pricetarget.priceTargetHigh ? <div><b>Target high:</b> <b style={{ color: 'green' }}>{pricetarget.priceTargetHigh}</b>&nbsp;{pricetarget.currency}</div> : null}
-          {pricetarget.priceTargetLow ? <div><b>Target low:</b> <b style={{ color: 'green' }}>{pricetarget.priceTargetLow}</b>&nbsp;{pricetarget.currency}</div> : null}
-          {pricetarget.priceTargetAverage && (pricetarget.numberOfAnalysts)
-            ? <div>
-              <b>Average:</b> <b style={{ color: 'green' }}>{pricetarget.priceTargetAverage}</b>
-                  &nbsp;based on <b style={{ color: 'green' }}>{pricetarget.numberOfAnalysts}</b> analysts as of <b>{pricetarget.updatedDate}</b>
-            </div>
-            : null}
-          <br />
+          <div style={{ color: 'darkred', fontWeight: 'bold' }}>{profile.ticker} - {profile.name} <span className='green'>Analyst Ratings</span></div>
         </div>
         <div style={{ width: '100%' }}>
-          {recommendation ? <div>
-            <Doughnut height={120} data={data} options={options} />
-          </div> : null}
+          <Line data={data} height={180} options={options} />
         </div>
       </div>
     );
   }
 }
 
-export default Analyst;
+export default AnalystTrends;
