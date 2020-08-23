@@ -15,13 +15,16 @@ const options = {
   scales: {
     xAxes: [{
       ticks: {
-        fontSize: 12
-      }
+        fontSize: 12,
+      },
+      stacked: true,
+      barPercentage: 0.4
     }],
     yAxes: [{
       ticks: {
-        fontSize: 12
-      }
+        fontSize: 12,
+      },
+      stacked: true
     }]
   },
   tooltips: {
@@ -39,18 +42,18 @@ const options = {
 };
 
 const attributes = [{
-  backgroundColor: 'darkgreen',
-  borderColor: 'darkgreen',
+  backgroundColor: '#1D8348',
+  borderColor: '#1D8348',
   attr: 'ratingBuy',
   label: 'Buy'
 }, {
-  backgroundColor: 'limegreen',
-  borderColor: 'limegreen',
+  backgroundColor: '#2ECC71',
+  borderColor: '#2ECC71',
   attr: 'ratingOverweight',
   label: 'Overweight'
 }, {
-  backgroundColor: 'lightseagreen',
-  borderColor: 'lightseagreen',
+  backgroundColor: '#5DADE2',
+  borderColor: '#5DADE2',
   attr: 'ratingHold',
   label: 'Hold'
 }, {
@@ -59,8 +62,8 @@ const attributes = [{
   attr: 'ratingUnderweight',
   label: 'Underweight'
 }, {
-  backgroundColor: 'red',
-  borderColor: 'red',
+  backgroundColor: '#CD5C5C',
+  borderColor: '#CD5C5C',
   attr: 'ratingSell',
   label: 'Sell'
 }];
