@@ -116,7 +116,7 @@ export class AnalystTrends extends React.Component {
       const btnText = copied ? 'Copied' : 'Copy Img';
       return (
         <div className='react-components-show-button'>
-          <img alt={`${profile.ticker} - ${profile.name} analyst opinions`} src={profile.recommendation_trend_img.url} style={{ width: '100%' }} />
+          <img alt={`${profile.ticker} - ${profile.name} analyst ratings trends`} src={profile.recommendation_trend_img.url} style={{ width: '100%' }} />
           <CopyToClipboard text={profile.recommendation_trend_img.url || ''}
             onCopy={() => this.setState({ copied: true })}
           >
