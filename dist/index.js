@@ -46,21 +46,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var options = {
   legend: {
     labels: {
-      fontSize: 14,
+      fontSize: 8,
       boxWidth: 3
     }
   },
   scales: {
     xAxes: [{
       ticks: {
-        fontSize: 12
+        fontSize: 8
       },
       stacked: true,
       barPercentage: 0.4
     }],
     yAxes: [{
       ticks: {
-        fontSize: 12
+        fontSize: 8
       },
       stacked: true
     }]
@@ -167,13 +167,13 @@ function (_React$Component) {
       if (!profile) {
         return _react["default"].createElement("div", {
           style: {
-            fontSize: 14
+            fontSize: 8
           }
         }, "Not available at this time... ");
       }
 
       if (profile.recommendation_trend_img && profile.recommendation_trend_img.url) {
-        var btnClass = copied ? 'react-components-show-url btn btn-sm btn-danger disabled font-10' : 'react-components-show-url btn btn-sm btn-warning font-10';
+        var btnClass = copied ? 'react-components-show-url btn btn-sm btn-danger disabled font-8' : 'react-components-show-url btn btn-sm btn-warning font-8';
         var btnText = copied ? 'Copied' : 'Copy Img';
         return _react["default"].createElement("div", {
           className: "react-components-show-button"
@@ -208,7 +208,7 @@ function (_React$Component) {
         style: {
           width: '100%',
           padding: 5,
-          fontSize: 14
+          fontSize: 8
         }
       }, _react["default"].createElement("div", {
         style: {
@@ -227,7 +227,7 @@ function (_React$Component) {
         options: options
       })), _react["default"].createElement("div", {
         style: {
-          fontSize: 12,
+          fontSize: 8,
           color: 'gray',
           padding: 5
         }
