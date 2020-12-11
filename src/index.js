@@ -44,33 +44,29 @@ const options = {
 const attributes = [{
   backgroundColor: '#1D8348',
   borderColor: '#1D8348',
-  attr: 'ratingBuy',
+  attr: 'strongBuy',
   label: 'Buy'
 }, {
   backgroundColor: '#2ECC71',
   borderColor: '#2ECC71',
-  attr: 'ratingOverweight',
+  attr: 'buy',
   label: 'Overweight'
 }, {
   backgroundColor: '#5DADE2',
   borderColor: '#5DADE2',
-  attr: 'ratingHold',
+  attr: 'hold',
   label: 'Hold'
 }, {
   backgroundColor: 'orange',
   borderColor: 'orange',
-  attr: 'ratingUnderweight',
+  attr: 'sell',
   label: 'Underweight'
 }, {
   backgroundColor: '#CD5C5C',
   borderColor: '#CD5C5C',
-  attr: 'ratingSell',
+  attr: 'stringSell',
   label: 'Sell'
 }];
-
-const date = (d) => {
-  return d.consensusStartDate || d.consensusEndDate;
-};
 
 const genDataSetAndAttributes = (attribute, data) => {
   return {
@@ -102,22 +98,20 @@ export class AnalystTrends extends React.Component {
   }
 
   render() {
-    const { profile } = this.props;
-    // eslint-disable-next-line
-    const initialData = _.sortBy(_.uniqBy((profile && profile.recommendation && profile.recommendation.data || []), d => dayjs(date(d)).format('YYYYMM')).filter(d => date(d)), d => date(d)).slice(-12);
+    const { profile, prop = 'analyst_yh', imgProp = 'analyst_yh_img' } = this.props;
     const { copied } = this.state;
     if (!profile) {
       return (
         <div style={{ fontSize: 8 }}>Not available at this time... </div>
       );
     }
-    if (profile.recommendation_trend_img && profile.recommendation_trend_img.url) {
+    if (profile[imgProp] && profile[imgProp].url) {
       const btnClass = copied ? 'react-components-show-url btn btn-sm btn-danger disabled font-8' : 'react-components-show-url btn btn-sm btn-warning font-8';
       const btnText = copied ? 'Copied' : 'Copy Img';
       return (
         <div className='react-components-show-button'>
-          <img alt={`${profile.ticker} - ${profile.name} analyst ratings trends`} src={profile.recommendation_trend_img.url} style={{ width: '100%' }} />
-          <CopyToClipboard text={profile.recommendation_trend_img.url || ''}
+          <img alt={`${profile.ticker} - ${profile.name} analyst opinions`} src={profile[imgProp].url} style={{ width: '100%' }} />
+          <CopyToClipboard text={profile[imgProp].url || ''}
             onCopy={() => this.setState({ copied: true })}
           >
             <button className={btnClass} value={btnText}>{btnText}</button>
@@ -125,15 +119,25 @@ export class AnalystTrends extends React.Component {
         </div>
       );
     }
+    const info = profile[prop] || {};
+    const recommendations = info.arr || []
     const data = {
-      labels: initialData.map(d => dayjs(date(d)).format('YYYYMM')),
-      datasets: attributes.map(attr => genDataSetAndAttributes(attr, initialData))
+      labels: recommendations.map(d => d.period),
+      datasets: attributes.map(attr => genDataSetAndAttributes(attr, recommendations))
     };
 
     return (
       <div>
         <div style={{ width: '100%', padding: 5, fontSize: 8 }}>
-          <div style={{ color: 'darkred', fontWeight: 'bold' }}>{profile.ticker} - {profile.name} <span className='green'>Analyst Ratings</span></div>
+          <div style={{ color: 'darkred', fontWeight: 'bold' }}>{profile.ticker} - {profile.name} <span className='green'>Analyst Trends</span></div>
+          {info.targetHighPrice ? <div><b>Target high:</b> <b style={{ color: 'green' }}>{info.targetHighPrice}</b>&nbsp;{info.currency}</div> : null}
+          {info.targetLowPrice ? <div><b>Target low:</b> <b style={{ color: 'green' }}>{info.targetLowPrice}</b>&nbsp;{info.currency}</div> : null}
+          {info.targetMeanPrice && info.numberOfAnalystOpinions
+            ? <div>
+              <b>Average:</b> <b style={{ color: 'green' }}>{info.targetMeanPrice}</b>
+                  &nbsp;based on <b style={{ color: 'green' }}>{info.numberOfAnalystOpinions}</b> analysts as of <b>{info.last_crawled.slice(0, 10)}</b>
+            </div>
+            : null}
         </div>
         <div style={{ width: '100%' }}>
           <Bar data={data} height={180} options={options} />

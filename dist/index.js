@@ -81,33 +81,29 @@ var options = {
 var attributes = [{
   backgroundColor: '#1D8348',
   borderColor: '#1D8348',
-  attr: 'ratingBuy',
+  attr: 'strongBuy',
   label: 'Buy'
 }, {
   backgroundColor: '#2ECC71',
   borderColor: '#2ECC71',
-  attr: 'ratingOverweight',
+  attr: 'buy',
   label: 'Overweight'
 }, {
   backgroundColor: '#5DADE2',
   borderColor: '#5DADE2',
-  attr: 'ratingHold',
+  attr: 'hold',
   label: 'Hold'
 }, {
   backgroundColor: 'orange',
   borderColor: 'orange',
-  attr: 'ratingUnderweight',
+  attr: 'sell',
   label: 'Underweight'
 }, {
   backgroundColor: '#CD5C5C',
   borderColor: '#CD5C5C',
-  attr: 'ratingSell',
+  attr: 'stringSell',
   label: 'Sell'
 }];
-
-var date = function date(d) {
-  return d.consensusStartDate || d.consensusEndDate;
-};
 
 var genDataSetAndAttributes = function genDataSetAndAttributes(attribute, data) {
   return _objectSpread({
@@ -152,16 +148,12 @@ function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var profile = this.props.profile; // eslint-disable-next-line
-
-      var initialData = _lodash["default"].sortBy(_lodash["default"].uniqBy(profile && profile.recommendation && profile.recommendation.data || [], function (d) {
-        return (0, _dayjs["default"])(date(d)).format('YYYYMM');
-      }).filter(function (d) {
-        return date(d);
-      }), function (d) {
-        return date(d);
-      }).slice(-12);
-
+      var _this$props = this.props,
+          profile = _this$props.profile,
+          _this$props$prop = _this$props.prop,
+          prop = _this$props$prop === void 0 ? 'analyst_yh' : _this$props$prop,
+          _this$props$imgProp = _this$props.imgProp,
+          imgProp = _this$props$imgProp === void 0 ? 'analyst_yh_img' : _this$props$imgProp;
       var copied = this.state.copied;
 
       if (!profile) {
@@ -172,19 +164,19 @@ function (_React$Component) {
         }, "Not available at this time... ");
       }
 
-      if (profile.recommendation_trend_img && profile.recommendation_trend_img.url) {
+      if (profile[imgProp] && profile[imgProp].url) {
         var btnClass = copied ? 'react-components-show-url btn btn-sm btn-danger disabled font-8' : 'react-components-show-url btn btn-sm btn-warning font-8';
         var btnText = copied ? 'Copied' : 'Copy Img';
         return _react["default"].createElement("div", {
           className: "react-components-show-button"
         }, _react["default"].createElement("img", {
-          alt: "".concat(profile.ticker, " - ").concat(profile.name, " analyst ratings trends"),
-          src: profile.recommendation_trend_img.url,
+          alt: "".concat(profile.ticker, " - ").concat(profile.name, " analyst opinions"),
+          src: profile[imgProp].url,
           style: {
             width: '100%'
           }
         }), _react["default"].createElement(_reactCopyToClipboard.CopyToClipboard, {
-          text: profile.recommendation_trend_img.url || '',
+          text: profile[imgProp].url || '',
           onCopy: function onCopy() {
             return _this2.setState({
               copied: true
@@ -196,12 +188,14 @@ function (_React$Component) {
         }, btnText)));
       }
 
+      var info = profile[prop] || {};
+      var recommendations = info.arr || [];
       var data = {
-        labels: initialData.map(function (d) {
-          return (0, _dayjs["default"])(date(d)).format('YYYYMM');
+        labels: recommendations.map(function (d) {
+          return d.period;
         }),
         datasets: attributes.map(function (attr) {
-          return genDataSetAndAttributes(attr, initialData);
+          return genDataSetAndAttributes(attr, recommendations);
         })
       };
       return _react["default"].createElement("div", null, _react["default"].createElement("div", {
@@ -217,7 +211,23 @@ function (_React$Component) {
         }
       }, profile.ticker, " - ", profile.name, " ", _react["default"].createElement("span", {
         className: "green"
-      }, "Analyst Ratings"))), _react["default"].createElement("div", {
+      }, "Analyst Trends")), info.targetHighPrice ? _react["default"].createElement("div", null, _react["default"].createElement("b", null, "Target high:"), " ", _react["default"].createElement("b", {
+        style: {
+          color: 'green'
+        }
+      }, info.targetHighPrice), "\xA0", info.currency) : null, info.targetLowPrice ? _react["default"].createElement("div", null, _react["default"].createElement("b", null, "Target low:"), " ", _react["default"].createElement("b", {
+        style: {
+          color: 'green'
+        }
+      }, info.targetLowPrice), "\xA0", info.currency) : null, info.targetMeanPrice && info.numberOfAnalystOpinions ? _react["default"].createElement("div", null, _react["default"].createElement("b", null, "Average:"), " ", _react["default"].createElement("b", {
+        style: {
+          color: 'green'
+        }
+      }, info.targetMeanPrice), "\xA0based on ", _react["default"].createElement("b", {
+        style: {
+          color: 'green'
+        }
+      }, info.numberOfAnalystOpinions), " analysts as of ", _react["default"].createElement("b", null, info.last_crawled.slice(0, 10))) : null), _react["default"].createElement("div", {
         style: {
           width: '100%'
         }
