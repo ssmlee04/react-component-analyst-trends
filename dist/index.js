@@ -101,7 +101,7 @@ var attributes = [{
 }, {
   backgroundColor: '#CD5C5C',
   borderColor: '#CD5C5C',
-  attr: 'stringSell',
+  attr: 'strongSell',
   label: 'Strong Sell'
 }];
 
