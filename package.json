@@ -1,5 +1,5 @@
 {
-  "name": "react-component-recommendations",
+  "name": "react-component-analyst-trends",
   "dependencies": {
     "chart.js": "^2.8.0",
     "dayjs": "^1.8.33",
