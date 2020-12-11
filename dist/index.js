@@ -234,7 +234,7 @@ function (_React$Component) {
         }
       }, _react["default"].createElement(_reactChartjs.Bar, {
         data: data,
-        height: 150,
+        height: 180,
         options: options
       })), _react["default"].createElement("div", {
         style: {
