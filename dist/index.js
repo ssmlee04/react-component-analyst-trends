@@ -82,12 +82,12 @@ var attributes = [{
   backgroundColor: '#1D8348',
   borderColor: '#1D8348',
   attr: 'strongBuy',
-  label: 'Buy'
+  label: 'Strong Buy'
 }, {
   backgroundColor: '#2ECC71',
   borderColor: '#2ECC71',
   attr: 'buy',
-  label: 'Overweight'
+  label: 'Buy'
 }, {
   backgroundColor: '#5DADE2',
   borderColor: '#5DADE2',
@@ -97,12 +97,12 @@ var attributes = [{
   backgroundColor: 'orange',
   borderColor: 'orange',
   attr: 'sell',
-  label: 'Underweight'
+  label: 'Sell'
 }, {
   backgroundColor: '#CD5C5C',
   borderColor: '#CD5C5C',
   attr: 'stringSell',
-  label: 'Sell'
+  label: 'Strong Sell'
 }];
 
 var genDataSetAndAttributes = function genDataSetAndAttributes(attribute, data) {
