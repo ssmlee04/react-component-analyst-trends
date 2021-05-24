@@ -46,21 +46,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var options = {
   legend: {
     labels: {
-      fontSize: 8,
+      fontSize: 12,
       boxWidth: 3
     }
   },
   scales: {
     xAxes: [{
       ticks: {
-        fontSize: 8
+        fontSize: 12
       },
       stacked: true,
       barPercentage: 0.4
     }],
     yAxes: [{
       ticks: {
-        fontSize: 8
+        fontSize: 12
       },
       stacked: true
     }]
@@ -159,13 +159,13 @@ function (_React$Component) {
       if (!profile) {
         return _react["default"].createElement("div", {
           style: {
-            fontSize: 8
+            fontSize: 12
           }
         }, "Not available at this time... ");
       }
 
       if (profile[imgProp] && profile[imgProp].url) {
-        var btnClass = copied ? 'react-components-show-url btn btn-sm btn-danger disabled font-8' : 'react-components-show-url btn btn-sm btn-warning font-8';
+        var btnClass = copied ? 'react-components-show-url btn btn-sm btn-danger disabled font-12' : 'react-components-show-url btn btn-sm btn-warning font-12';
         var btnText = copied ? 'Copied' : 'Copy Img';
         return _react["default"].createElement("div", {
           className: "react-components-show-button"
@@ -203,7 +203,7 @@ function (_React$Component) {
         style: {
           width: '100%',
           padding: 5,
-          fontSize: 8
+          fontSize: 12
         }
       }, _react["default"].createElement("div", {
         style: {
@@ -216,15 +216,15 @@ function (_React$Component) {
         style: {
           color: 'green'
         }
-      }, info.targetHighPrice), "\xA0", info.currency) : null, info.targetLowPrice ? _react["default"].createElement("div", null, _react["default"].createElement("b", null, "Target low:"), " ", _react["default"].createElement("b", {
+      }, info.targetHighPrice), "\xA0", _react["default"].createElement("b", null, info.currency)) : null, info.targetLowPrice ? _react["default"].createElement("div", null, _react["default"].createElement("b", null, "Target low:"), " ", _react["default"].createElement("b", {
         style: {
           color: 'green'
         }
-      }, info.targetLowPrice), "\xA0", info.currency) : null, info.targetMeanPrice && info.numberOfAnalystOpinions ? _react["default"].createElement("div", null, _react["default"].createElement("b", null, "Average:"), " ", _react["default"].createElement("b", {
+      }, info.targetLowPrice), "\xA0", _react["default"].createElement("b", null, info.currency)) : null, info.targetMeanPrice && info.numberOfAnalystOpinions ? _react["default"].createElement("div", null, _react["default"].createElement("b", null, "Average:"), " ", _react["default"].createElement("b", {
         style: {
           color: 'green'
         }
-      }, info.targetMeanPrice), "\xA0based on ", _react["default"].createElement("b", {
+      }, info.targetMeanPrice), "\xA0", _react["default"].createElement("b", null, info.currency), "\xA0based on ", _react["default"].createElement("b", {
         style: {
           color: 'green'
         }
@@ -238,7 +238,7 @@ function (_React$Component) {
         options: options
       })), _react["default"].createElement("div", {
         style: {
-          fontSize: 8,
+          fontSize: 12,
           color: 'gray',
           padding: 5,
           paddingTop: 2
