@@ -5,42 +5,6 @@ import { Bar } from 'react-chartjs-2';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import './../index.css';
 
-const options = {
-  legend: {
-    labels: {
-      fontSize: 12,
-      boxWidth: 3,
-    }
-  },
-  scales: {
-    xAxes: [{
-      ticks: {
-        fontSize: 12,
-      },
-      stacked: true,
-      barPercentage: 0.4
-    }],
-    yAxes: [{
-      ticks: {
-        fontSize: 12,
-      },
-      stacked: true
-    }]
-  },
-  tooltips: {
-    callbacks: {
-      label: function(tooltipItem, data) {
-        const info = data.datasets[tooltipItem.datasetIndex];
-        const reportDate = info.all[tooltipItem.datasetIndex].reportDate;
-          var label = `${reportDate} ${info.label}: `;
-          label += tooltipItem.yLabel || 'n/a';
-          label += '%';
-          return label;
-      }
-    }
-  }
-};
-
 const attributes = [{
   backgroundColor: '#1D8348',
   borderColor: '#1D8348',
@@ -89,16 +53,8 @@ export class AnalystTrends extends React.Component {
     };
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const { profile } = this.props;
-    if (!profile) return true;
-    if (nextState.copied) return true;
-    if (profile.ticker !== nextProps.profile.ticker) return true;
-    return false;
-  }
-
   render() {
-    const { profile, prop = 'analysts_yh', imgProp = 'analysts_trends_yh_img' } = this.props;
+    const { profile, prop = 'analysts_yh', imgProp = 'analysts_trends_yh_img', theme = 'light' } = this.props;
     const { copied } = this.state;
     if (!profile) {
       return (
@@ -120,30 +76,69 @@ export class AnalystTrends extends React.Component {
       );
     }
     const info = profile[prop] || {};
-    let recommendations = info.arr || [];
-    recommendations.reverse();
+    let recommendations = _.sortBy(info.arr || [], d => d.period);
     const data = {
       labels: recommendations.map(d => d.period),
       datasets: attributes.map(attr => genDataSetAndAttributes(attr, recommendations))
     };
 
+    const fontColor = theme === 'light' ? '#222222' : '#dddddd';
+    const options = {
+      legend: {
+        labels: {
+          fontSize: 12,
+          fontColor,
+          boxWidth: 3,
+        }
+      },
+      scales: {
+        xAxes: [{
+          ticks: {
+            fontSize: 12,
+            fontColor
+          },
+          stacked: true,
+          barPercentage: 0.4
+        }],
+        yAxes: [{
+          ticks: {
+            fontSize: 12,
+            fontColor
+          },
+          stacked: true
+        }]
+      },
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data) {
+            const info = data.datasets[tooltipItem.datasetIndex];
+            const reportDate = info.all[tooltipItem.datasetIndex].reportDate;
+              var label = `${reportDate} ${info.label}: `;
+              label += tooltipItem.yLabel || 'n/a';
+              label += '%';
+              return label;
+          }
+        }
+      }
+    };
+
     return (
       <div>
         <div style={{ width: '100%', padding: 5, fontSize: 12 }}>
-          <div style={{ color: 'darkred', fontWeight: 'bold' }}>{profile.ticker} - {profile.name} <span className='green'>Analyst Trends</span></div>
-          {info.targetHighPrice ? <div><b>Target high:</b> <b style={{ color: 'green' }}>{info.targetHighPrice}</b>&nbsp;<b>{info.currency}</b></div> : null}
-          {info.targetLowPrice ? <div><b>Target low:</b> <b style={{ color: 'green' }}>{info.targetLowPrice}</b>&nbsp;<b>{info.currency}</b></div> : null}
+          <div className={`theme-darkred-${theme}`} style={{ fontWeight: 'bold' }}>{profile.ticker} - {profile.name} <span className={`theme-green-${theme}`}>Analyst Trends</span></div>
+          {info.targetHighPrice ? <div><b>Target high:</b> <b className={`theme-green-${theme}`}>{info.targetHighPrice}</b>&nbsp;<b>{info.currency}</b></div> : null}
+          {info.targetLowPrice ? <div><b>Target low:</b> <b className={`theme-green-${theme}`}>{info.targetLowPrice}</b>&nbsp;<b>{info.currency}</b></div> : null}
           {info.targetMeanPrice && info.numberOfAnalystOpinions
             ? <div>
-              <b>Average:</b> <b style={{ color: 'green' }}>{info.targetMeanPrice}</b>&nbsp;<b>{info.currency}</b>
-                  &nbsp;based on <b style={{ color: 'green' }}>{info.numberOfAnalystOpinions}</b> analysts as of <b>{info.last_crawled.slice(0, 10)}</b>
+              <b>Average:</b> <b className={`theme-green-${theme}`}>{info.targetMeanPrice}</b>&nbsp;<b>{info.currency}</b>
+                  &nbsp;based on <b className={`theme-green-${theme}`}>{info.numberOfAnalystOpinions}</b> analysts as of <b>{info.last_crawled.slice(0, 10)}</b>
             </div>
             : null}
         </div>
         <div style={{ width: '100%' }}>
           <Bar data={data} height={180} options={options} />
         </div>
-        <div style={{ fontSize: 12, color: 'gray', padding: 5, paddingTop: 2 }}>Generated by <span style={{ color: 'darkred' }}>@earningsfly</span> with <span style={{ fontSize: 16, color: 'red' }}>❤️</span></div>
+        <div style={{ fontSize: 12, padding: 5, paddingTop: 2 }}>Generated by <a href='https://twitter.com/earningsfly' target='_blank' className={`theme-darkred-${theme}`}>@earningsfly</a> with <span style={{ fontSize: 16, color: 'red' }}>❤️</span></div>
       </div>
     );
   }

@@ -41,41 +41,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var options = {
-  legend: {
-    labels: {
-      fontSize: 12,
-      boxWidth: 3
-    }
-  },
-  scales: {
-    xAxes: [{
-      ticks: {
-        fontSize: 12
-      },
-      stacked: true,
-      barPercentage: 0.4
-    }],
-    yAxes: [{
-      ticks: {
-        fontSize: 12
-      },
-      stacked: true
-    }]
-  },
-  tooltips: {
-    callbacks: {
-      label: function label(tooltipItem, data) {
-        var info = data.datasets[tooltipItem.datasetIndex];
-        var reportDate = info.all[tooltipItem.datasetIndex].reportDate;
-        var label = "".concat(reportDate, " ").concat(info.label, ": ");
-        label += tooltipItem.yLabel || 'n/a';
-        label += '%';
-        return label;
-      }
-    }
-  }
-};
 var attributes = [{
   backgroundColor: '#1D8348',
   borderColor: '#1D8348',
@@ -133,15 +98,6 @@ function (_React$Component) {
   }
 
   _createClass(AnalystTrends, [{
-    key: "shouldComponentUpdate",
-    value: function shouldComponentUpdate(nextProps, nextState) {
-      var profile = this.props.profile;
-      if (!profile) return true;
-      if (nextState.copied) return true;
-      if (profile.ticker !== nextProps.profile.ticker) return true;
-      return false;
-    }
-  }, {
     key: "render",
     value: function render() {
       var _this2 = this;
@@ -151,7 +107,9 @@ function (_React$Component) {
           _this$props$prop = _this$props.prop,
           prop = _this$props$prop === void 0 ? 'analysts_yh' : _this$props$prop,
           _this$props$imgProp = _this$props.imgProp,
-          imgProp = _this$props$imgProp === void 0 ? 'analysts_trends_yh_img' : _this$props$imgProp;
+          imgProp = _this$props$imgProp === void 0 ? 'analysts_trends_yh_img' : _this$props$imgProp,
+          _this$props$theme = _this$props.theme,
+          theme = _this$props$theme === void 0 ? 'light' : _this$props$theme;
       var copied = this.state.copied;
 
       if (!profile) {
@@ -187,8 +145,11 @@ function (_React$Component) {
       }
 
       var info = profile[prop] || {};
-      var recommendations = info.arr || [];
-      recommendations.reverse();
+
+      var recommendations = _lodash["default"].sortBy(info.arr || [], function (d) {
+        return d.period;
+      });
+
       var data = {
         labels: recommendations.map(function (d) {
           return d.period;
@@ -197,6 +158,45 @@ function (_React$Component) {
           return genDataSetAndAttributes(attr, recommendations);
         })
       };
+      var fontColor = theme === 'light' ? '#222222' : '#dddddd';
+      var options = {
+        legend: {
+          labels: {
+            fontSize: 12,
+            fontColor: fontColor,
+            boxWidth: 3
+          }
+        },
+        scales: {
+          xAxes: [{
+            ticks: {
+              fontSize: 12,
+              fontColor: fontColor
+            },
+            stacked: true,
+            barPercentage: 0.4
+          }],
+          yAxes: [{
+            ticks: {
+              fontSize: 12,
+              fontColor: fontColor
+            },
+            stacked: true
+          }]
+        },
+        tooltips: {
+          callbacks: {
+            label: function label(tooltipItem, data) {
+              var info = data.datasets[tooltipItem.datasetIndex];
+              var reportDate = info.all[tooltipItem.datasetIndex].reportDate;
+              var label = "".concat(reportDate, " ").concat(info.label, ": ");
+              label += tooltipItem.yLabel || 'n/a';
+              label += '%';
+              return label;
+            }
+          }
+        }
+      };
       return _react["default"].createElement("div", null, _react["default"].createElement("div", {
         style: {
           width: '100%',
@@ -204,28 +204,20 @@ function (_React$Component) {
           fontSize: 12
         }
       }, _react["default"].createElement("div", {
+        className: "theme-darkred-".concat(theme),
         style: {
-          color: 'darkred',
           fontWeight: 'bold'
         }
       }, profile.ticker, " - ", profile.name, " ", _react["default"].createElement("span", {
-        className: "green"
+        className: "theme-green-".concat(theme)
       }, "Analyst Trends")), info.targetHighPrice ? _react["default"].createElement("div", null, _react["default"].createElement("b", null, "Target high:"), " ", _react["default"].createElement("b", {
-        style: {
-          color: 'green'
-        }
+        className: "theme-green-".concat(theme)
       }, info.targetHighPrice), "\xA0", _react["default"].createElement("b", null, info.currency)) : null, info.targetLowPrice ? _react["default"].createElement("div", null, _react["default"].createElement("b", null, "Target low:"), " ", _react["default"].createElement("b", {
-        style: {
-          color: 'green'
-        }
+        className: "theme-green-".concat(theme)
       }, info.targetLowPrice), "\xA0", _react["default"].createElement("b", null, info.currency)) : null, info.targetMeanPrice && info.numberOfAnalystOpinions ? _react["default"].createElement("div", null, _react["default"].createElement("b", null, "Average:"), " ", _react["default"].createElement("b", {
-        style: {
-          color: 'green'
-        }
+        className: "theme-green-".concat(theme)
       }, info.targetMeanPrice), "\xA0", _react["default"].createElement("b", null, info.currency), "\xA0based on ", _react["default"].createElement("b", {
-        style: {
-          color: 'green'
-        }
+        className: "theme-green-".concat(theme)
       }, info.numberOfAnalystOpinions), " analysts as of ", _react["default"].createElement("b", null, info.last_crawled.slice(0, 10))) : null), _react["default"].createElement("div", {
         style: {
           width: '100%'
@@ -237,14 +229,13 @@ function (_React$Component) {
       })), _react["default"].createElement("div", {
         style: {
           fontSize: 12,
-          color: 'gray',
           padding: 5,
           paddingTop: 2
         }
-      }, "Generated by ", _react["default"].createElement("span", {
-        style: {
-          color: 'darkred'
-        }
+      }, "Generated by ", _react["default"].createElement("a", {
+        href: "https://twitter.com/earningsfly",
+        target: "_blank",
+        className: "theme-darkred-".concat(theme)
       }, "@earningsfly"), " with ", _react["default"].createElement("span", {
         style: {
           fontSize: 16,
