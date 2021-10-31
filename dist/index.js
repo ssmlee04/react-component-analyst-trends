@@ -145,6 +145,7 @@ function (_React$Component) {
       }
 
       var info = profile[prop] || {};
+      var gridColor = theme === 'light' ? 'rgba(80, 80, 80, 0.1)' : 'rgba(255, 255, 255, 0.2)';
 
       var recommendations = _lodash["default"].sortBy(info.arr || [], function (d) {
         return d.period;
@@ -173,6 +174,9 @@ function (_React$Component) {
               fontSize: 12,
               fontColor: fontColor
             },
+            gridLines: {
+              color: gridColor
+            },
             stacked: true,
             barPercentage: 0.4
           }],
@@ -180,6 +184,9 @@ function (_React$Component) {
             ticks: {
               fontSize: 12,
               fontColor: fontColor
+            },
+            gridLines: {
+              color: gridColor
             },
             stacked: true
           }]

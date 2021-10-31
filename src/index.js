@@ -76,6 +76,7 @@ export class AnalystTrends extends React.Component {
       );
     }
     const info = profile[prop] || {};
+    const gridColor = theme === 'light' ? 'rgba(80, 80, 80, 0.1)' : 'rgba(255, 255, 255, 0.2)';
     let recommendations = _.sortBy(info.arr || [], d => d.period);
     const data = {
       labels: recommendations.map(d => d.period),
@@ -97,6 +98,9 @@ export class AnalystTrends extends React.Component {
             fontSize: 12,
             fontColor
           },
+          gridLines: {
+            color: gridColor
+          },
           stacked: true,
           barPercentage: 0.4
         }],
@@ -104,6 +108,9 @@ export class AnalystTrends extends React.Component {
           ticks: {
             fontSize: 12,
             fontColor
+          },
+          gridLines: {
+            color: gridColor
           },
           stacked: true
         }]
