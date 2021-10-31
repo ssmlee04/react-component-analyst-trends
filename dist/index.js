@@ -217,7 +217,7 @@ function (_React$Component) {
         }
       }, profile.ticker, " - ", profile.name, " ", _react["default"].createElement("span", {
         className: "theme-green-".concat(theme)
-      }, "Analyst Trends")), info.targetHighPrice ? _react["default"].createElement("div", null, "Target high:\xA0", _react["default"].createElement("b", {
+      }, "Analyst Consensus")), info.targetHighPrice ? _react["default"].createElement("div", null, "Target high:\xA0", _react["default"].createElement("b", {
         className: "theme-green-".concat(theme)
       }, info.targetHighPrice, "\xA0"), info.currency) : null, info.targetLowPrice ? _react["default"].createElement("div", null, "Target low:\xA0", _react["default"].createElement("b", {
         className: "theme-green-".concat(theme)
